@@ -1,0 +1,53 @@
+
+tstop = 500
+dt = 0.1
+steps_per_ms = 10
+v_init = -65
+
+load_file("Fusiform.tem")
+
+objref cell[1][1]
+cell[0][0] = new Fusiform()
+access cell[0][0].soma
+
+cvode.active(1)
+objref g, b
+b = new VBox()
+b.intercept(1)
+g = new Graph()
+g.size(0,tstop,-80,60)
+g.addvar("cell[0][0].soma.v(0.5)",2,1, 2*tstop,0,2)
+g.xaxis(1)
+g.begin()
+xpanel("")
+xbutton("run Quiet", "run_quiet()")
+xbutton("run Active", "run_active()")
+xpanel()
+b.intercept(0)
+b.map()
+
+proc init() {
+	t=0
+        forall {v=v_init}
+	finitialize(v)
+        fcurrent()
+	cvode.re_init()
+}
+
+proc step() {
+	fadvance()
+	g.plot(t)
+	g.flush()
+	doNotify()
+}
+
+proc run_quiet() {
+gkirbar_fuscurr = 0.001 //Quiet gKIR
+run()
+}
+
+proc run_active() {
+gkirbar_fuscurr = 0.0005  //Active gKIR
+run()
+}
+

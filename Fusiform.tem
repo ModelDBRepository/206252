@@ -1,0 +1,49 @@
+
+//  Neuron model for Dorsal Cochlear Nucleus Pyramidal cell
+
+
+begintemplate Fusiform
+
+public soma,spiketimes, spikecount
+create soma
+objref spikecount, spiketimes,vc
+
+  
+  proc init() { 
+    create soma
+	
+    spiketimes = new Vector()
+    spikecount = new Vector()
+
+    celsius=33
+	
+    soma {
+
+		nseg = 1
+		diam = 20
+		L = 20 //um
+		
+		insert fuscurr
+		gnabar_fuscurr =  0.08
+		gkbar_fuscurr =  0.02
+		ghbar_fuscurr = 0.00054 
+		gkirbar_fuscurr = 0.001
+		gnapbar_fuscurr = 0.0001
+		
+		ek = -81.5
+		eh = -43
+		ena = 50
+		enap = 50
+		ekir = -81.5
+		
+		forall Ra = 70  //  set_ra(70)
+
+
+       spikecount = new APCount(0.5)
+       spikecount.thresh = -20
+       spikecount.record(spiketimes)
+       
+    }
+  }	
+
+endtemplate Fusiform
